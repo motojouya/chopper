@@ -5,20 +5,40 @@ import './App.css';
 const App = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <main>
+        <div>
+          <div>
+            <h3>info</h3>
+            <dl>
+              <dt>時間</dt>
+              <dd>20分</dd>
+              <dt>人数</dt>
+              <dd>3 - 4人前</dd>
+              <dt>冷蔵保存</dt>
+              <dd>4日</dd>
+            </dl>
+          </div>
+          <div>
+            <h3>材料</h3>
+            <dl>
+              <dt>にんじん</dt>
+              <dd>1本</dd>
+              <dt>たまねぎ</dt>
+              <dd>1個</dd>
+              <dt>じゃがいも</dt>
+              <dd>1個</dd>
+            </dl>
+          </div>
+          <div>
+            <h3>手順</h3>
+            <ol>
+              <li>材料をきる</li>
+              <li>煮込む</li>
+              <li>味付ける</li>
+            </ol>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

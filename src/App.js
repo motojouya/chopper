@@ -37,6 +37,10 @@ const App = () => {
               <li>味付ける</li>
             </ol>
           </div>
+          <div>
+            <h3>ポイント</h3>
+            <p>醤油は控えめに</p>
+          </div>
         </div>
       </main>
     </div>

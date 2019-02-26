@@ -4,7 +4,24 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const search = window.location.search;
+
+const querys = search => {
+
+  if (!search) {
+    return;
+  }
+
+  return search.slice(1).split('&').map(query => {
+    const splited = query.split('=');
+    return {
+      name: splited[0],
+      value: splited[1],
+    };
+  });
+}
+
+ReactDOM.render(<App query={querys(search)} />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

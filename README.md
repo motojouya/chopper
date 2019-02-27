@@ -1,6 +1,6 @@
 
-node_modules/.bin/netlify-lambda serve src/functions
-
+node_modules/.bin/netlify-lambda serve src/functions --config webpack.functions.js
+http://localhost:9000/.netlify/functions/mariegohan
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

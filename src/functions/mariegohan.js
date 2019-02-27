@@ -14,9 +14,7 @@ exports.handler = async (event, context, callback) => {
     const searchResults = await page.evaluate(() => {
       const ret = [];
       const titles = document.querySelectorAll("h1.entry-title");
-      console.log(titles);
       const title = titles[0].innerText;
-      console.log(title);
 
       // nodeList.forEach(node => {
       //   ret.push(node.innerText);
@@ -24,9 +22,10 @@ exports.handler = async (event, context, callback) => {
 
       return title;
     });
-    console.log(searchResults);
+
     return callback(null, {
       statusCode: 200,
+      headers: {'content-type': 'application/json'},
       body: JSON.stringify({ searchResults: searchResults })
     });
   } catch (err) {

@@ -1,3 +1,8 @@
+
+node_modules/.bin/netlify-lambda serve src/functions
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

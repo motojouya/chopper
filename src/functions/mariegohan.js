@@ -13,7 +13,8 @@ exports.handler = async (event, context, callback) => {
     await page.goto('https://mariegohan.com/12650', { waitUntil: 'domcontentloaded' });
     const searchResults = await page.evaluate(() => {
       const ret = [];
-      const titles = document.querySelectorAll("h1");
+      const titles = document.querySelectorAll("h1.entry-title");
+      console.log(titles);
       const title = titles[0].innerText;
       console.log(title);
 
@@ -23,6 +24,7 @@ exports.handler = async (event, context, callback) => {
 
       return title;
     });
+    console.log(searchResults);
     return callback(null, {
       statusCode: 200,
       body: JSON.stringify({ searchResults: searchResults })

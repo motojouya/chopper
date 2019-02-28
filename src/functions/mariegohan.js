@@ -59,6 +59,7 @@ exports.handler = async (event, context, callback) => {
   const url = 'https://mariegohan.com/' + articleId;
   //TODO articleIdは数値以外はoutなので、そのバリデーション
 
+  try {
   request(url, (e, response, body) => {
     return callback(null, {
       statusCode: 200,
@@ -83,4 +84,7 @@ exports.handler = async (event, context, callback) => {
     //   return callback(err);
     // }
   });
+} catch (e) {
+  return callback(e);
+}
 }

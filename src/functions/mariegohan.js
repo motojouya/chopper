@@ -1,9 +1,10 @@
 const request = require('request');
-const {
-  JSDOM
-} = require('jsdom');
+// const {
+//   JSDOM
+// } = require('jsdom');
+const cheerio = require('cheerio');
 
-const scraper = (document) => {
+const scraper = ($) => {
 
   const informationNameMap = {
     '調理時間': 'time',
@@ -11,25 +12,37 @@ const scraper = (document) => {
     '人数': 'amount',
   };
 
-  const title = document.querySelector('h1.entry-title').textContent;
+  const title = $('h1.entry-title').text();
 
-  const infoText = document.querySelectorAll('div.entry-content > p')[2].textContent;
+  const infoText = $('div.entry-content > p').eq(2).text();
+
   const info = infoText.split('　').filter(text => text).reduce((acc, text) => {
     const [name, value] = text.split('：');
     acc[informationNameMap[name]] = value;
     return acc;
   }, {});
 
-  const ingredients = Array.from(document.querySelectorAll('h3.ingredients + ul > li'))
-    .map(ingredient => ingredient.textContent)
-    .map(ingredient => {
+  const ingredients = [];
+  $('h3.ingredients + ul > li')
+    .map((i, ingredient) => {
+      return $(ingredient).text();
+    })
+    .map((i, ingredient) => {
       const [item, amount] = ingredient.split('　');
       return { item, amount };
+    })
+    .each((i, ingredient) => {
+      ingredients.push(ingredient);
     });
 
-  const processes = Array.from(document.querySelectorAll('h3.process + ol > li')).map(process => process.textContent.split('<img')[0]);
+  const processes = [];
+  $('h3.process + ol > li')
+    .map((i, process) => $(process).text().split('<img')[0])
+    .each((i, process) => {
+      processes.push(process);
+    });
 
-  const point = document.querySelector('h3.point + p').textContent;
+  const point = $('h3.point + p').text();
 
   return {
     title,
@@ -53,7 +66,9 @@ exports.handler = async (event, context, callback) => {
     }
 
     try {
-      const result = scraper(new JSDOM(body).window.document);
+      const $ = cheerio.load(body);
+      const result = scraper($);
+      console.log(result);
       return callback(null, {
         statusCode: 200,
         headers: {'content-type': 'application/json'},
@@ -62,7 +77,7 @@ exports.handler = async (event, context, callback) => {
           url,
         })
       });
-    } catch (e) {
+    } catch (err) {
       return callback(err);
     }
   });

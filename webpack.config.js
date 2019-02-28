@@ -7,5 +7,14 @@ module.exports = {
         pathRewrite: { '^/.netlify/functions': '' }
       }
     }
-  }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.node$/,
+        use: 'node-loader'
+      }
+    ]
+  },
+  optimization: { minimize: false },
 };

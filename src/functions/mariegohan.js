@@ -1,8 +1,9 @@
-const launchChrome = require('@serverless-chrome/lambda')
-const CDP = require('chrome-remote-interface')
-const puppeteer = require('puppeteer-core')
+const request = require('request');
+const {
+  JSDOM
+} = require('jsdom');
 
-const scraper = () => {
+const scraper = (document) => {
 
   const informationNameMap = {
     '調理時間': 'time',
@@ -46,26 +47,23 @@ exports.handler = async (event, context, callback) => {
   const url = 'https://mariegohan.com/' + articleId;
   //TODO articleIdは数値以外はoutなので、そのバリデーション
 
-  try {
-    const slsChrome = await launchChrome.default();
-    const browser = await puppeteer.connect({
-      browserWSEndpoint: (await CDP.Version()).webSocketDebuggerUrl
-    });
-    const page = await browser.defaultBrowserContext().newPage();
+  request(url, (e, response, body) => {
+    if (e) {
+      console.error(e)
+    }
 
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
-
-    const result = await page.evaluate(scraper);
-
-    return callback(null, {
-      statusCode: 200,
-      headers: {'content-type': 'application/json'},
-      body: JSON.stringify({
-        ...result,
-        url,
-      })
-    });
-  } catch (err) {
-    return callback(err);
-  }
+    try {
+      const result = scraper(new JSDOM(body).window.document);
+      return callback(null, {
+        statusCode: 200,
+        headers: {'content-type': 'application/json'},
+        body: JSON.stringify({
+          ...result,
+          url,
+        })
+      });
+    } catch (e) {
+      return callback(err);
+    }
+  });
 }

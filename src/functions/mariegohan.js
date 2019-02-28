@@ -72,7 +72,7 @@ exports.handler = async (event, context, callback) => {
       console.log(result);
       return callback(null, {
         statusCode: 200,
-        headers: {'content-type': 'application/json'},
+        // headers: {'content-type': 'application/json'},
         body: JSON.stringify(result),
       });
     } catch (err) {

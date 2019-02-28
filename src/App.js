@@ -15,7 +15,10 @@ import {
 import styled from 'styled-components';
 // import './App.css';
 
-const getRecipe = articleId => fetch('/.netlify/functions/mariegohan?article=' + articleId, {credentials: 'include', mode: 'cors'}).then(res => res.json());
+const getRecipe = articleId => fetch('/.netlify/functions/mariegohan?article=' + articleId, {credentials: 'include', mode: 'cors'}).then(res => {
+  console.log(res);
+  return res.json();
+});
 
 const Recipe = ({ recipe, width }) => {
   return (

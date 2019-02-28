@@ -68,6 +68,7 @@ exports.handler = async (event, context, callback) => {
     try {
       const $ = cheerio.load(body);
       const result = scraper($);
+      result.url = url;
       console.log(result);
       return callback(null, {
         statusCode: 200,

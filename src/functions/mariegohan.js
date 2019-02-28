@@ -73,7 +73,8 @@ exports.handler = async (event, context, callback) => {
       return callback(null, {
         statusCode: 200,
         // headers: {'content-type': 'application/json'},
-        body: JSON.stringify(result),
+        // body: JSON.stringify(result),
+        body: JSON.stringify({a: 'test'}),
       });
     } catch (err) {
       return callback(err);

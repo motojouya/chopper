@@ -1,5 +1,5 @@
 
-node_modules/.bin/netlify-lambda serve src/functions --config webpack.functions.js
+node_modules/.bin/netlify-lambda serve src/functions --config webpack.config.js
 http://localhost:9000/.netlify/functions/mariegohan
 
 

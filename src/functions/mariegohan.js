@@ -59,23 +59,28 @@ exports.handler = async (event, context, callback) => {
   const url = 'https://mariegohan.com/' + articleId;
   //TODO articleIdは数値以外はoutなので、そのバリデーション
 
-  request(url, (e, response, body) => {
-    if (e) {
-      console.error(e)
-    }
-
-    // try {
-      const $ = cheerio.load(body);
-      const result = scraper($);
-      result.url = url;
-      console.log(result);
-      return callback(null, {
-        statusCode: 200,
-        // headers: {'content-type': 'application/json'},
-        body: JSON.stringify(result),
-      });
-    // } catch (err) {
-    //   return callback(err);
-    // }
+  return callback(null, {
+    statusCode: 200,
+    // headers: {'content-type': 'application/json'},
+    body: JSON.stringify({a: 'test'}),
   });
+  // request(url, (e, response, body) => {
+  //   if (e) {
+  //     console.error(e)
+  //   }
+  //
+  //   try {
+  //     const $ = cheerio.load(body);
+  //     const result = scraper($);
+  //     result.url = url;
+  //     console.log(result);
+  //     return callback(null, {
+  //       statusCode: 200,
+  //       // headers: {'content-type': 'application/json'},
+  //       body: JSON.stringify(result),
+  //     });
+  //   } catch (err) {
+  //     return callback(err);
+  //   }
+  // });
 }

@@ -64,7 +64,7 @@ exports.handler = async (event, context, callback) => {
       console.error(e)
     }
 
-    try {
+    // try {
       const $ = cheerio.load(body);
       const result = scraper($);
       result.url = url;
@@ -72,11 +72,10 @@ exports.handler = async (event, context, callback) => {
       return callback(null, {
         statusCode: 200,
         // headers: {'content-type': 'application/json'},
-        // body: JSON.stringify(result),
-        body: 'test',
+        body: JSON.stringify(result),
       });
-    } catch (err) {
-      return callback(err);
-    }
+    // } catch (err) {
+    //   return callback(err);
+    // }
   });
 }

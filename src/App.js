@@ -15,105 +15,7 @@ import {
 import styled from 'styled-components';
 // import './App.css';
 
-const recipes = [
-  {
-    title: 'にくじゃが',
-    url: 'https://test-recipe/12345',
-    info: {
-      time: 30,
-      amount: '3,4',
-      keepable: '3',
-    },
-    ingredients: [
-      { name: 'にんじん', amount: '1本' },
-      { name: 'じゃがいも', amount: '1個' },
-      { name: 'たまねぎ', amount: '1個' },
-    ],
-    orders: [
-      'きる',
-      'いためる',
-      'やく',
-    ],
-    point: '醤油はすくなめ！'
-  },
-  {
-    title: 'カレー',
-    url: 'https://test-recipe/54321',
-    info: {
-      time: 60,
-      amount: '5,6',
-      keepable: '5',
-    },
-    ingredients: [
-      { name: 'にんじん', amount: '1本' },
-      { name: 'じゃがいも', amount: '1個' },
-      { name: 'たまねぎ', amount: '1個' },
-    ],
-    orders: [
-      'きる',
-      'いためる',
-      'やく',
-      'ルー',
-    ],
-    point: 'たくさん作ろう！'
-  },
-  {
-    title: '無限ピーマン',
-    url: 'https://test-recipe/67890',
-    info: {
-      time: 10,
-      amount: '1,2',
-      keepable: '2',
-    },
-    ingredients: [
-      { name: 'ピーマン', amount: '1個' },
-      { name: 'マヨネーズ', amount: 'すこし' },
-    ],
-    orders: [
-      'きる',
-      'まぜる',
-      'やく',
-    ],
-    point: '何も気をつける必要はない'
-  },
-  {
-    title: 'かぶの浅漬',
-    url: 'https://test-recipe/9876',
-    info: {
-      time: 10,
-      amount: '1,2',
-      keepable: '7',
-    },
-    ingredients: [
-      { name: 'かぶ', amount: '1個' },
-      { name: '酢', amount: 'すこし' },
-    ],
-    orders: [
-      'きる',
-      'まぜる',
-    ],
-    point: '漬けすぎないようにね！'
-  },
-  {
-    title: 'にんじんシリシリ',
-    url: 'https://test-recipe/10',
-    info: {
-      time: 30,
-      amount: '3,4',
-      keepable: '4',
-    },
-    ingredients: [
-      { name: 'にんじん', amount: '1個' },
-      { name: 'たまご', amount: 'すこし' },
-    ],
-    orders: [
-      'シリシリする',
-      '炒める',
-      '卵でとじる',
-    ],
-    point: 'おいしいよ！'
-  },
-];
+const getRecipe = articleId => fetch('/.netlify/functions/mariegohan?article=' + articleId).then(res => res.json());
 
 const Recipe = ({ recipe, width }) => {
   return (
@@ -140,19 +42,19 @@ const Recipe = ({ recipe, width }) => {
             recipe.ingredients.map(ingredient => {
               return (
                 <React.Fragment>
-                  <dt>{ ingredient.name }</dt>
-                  <dd>{ ingredient.amount } { ingredient.unit }</dd>
+                  <dt>{ ingredient.item }</dt>
+                  <dd>{ ingredient.amount }</dd>
                 </React.Fragment>
               );
             })
           }</dl>
         </div>
       }
-      { recipe.orders &&
+      { recipe.processes &&
         <div>
           <h3>手順</h3>
           <ol>{
-            recipe.orders.map(order => {
+            recipe.processes.map(order => {
               return (
                 <li>{ order }</li>
               );
@@ -186,7 +88,7 @@ const Form = () => {
 
   const [querys, setQuerys] = useState([]);
   const onClick = () => {
-    window.location.href = window.location.href + '?query=' + querys.join(',');
+    window.location.href = window.location.href + '?articles=' + querys.join(',');
   };
   const onEnter = e => {
     if (e.key === 'Enter') {
@@ -213,24 +115,45 @@ const Form = () => {
   );
 };
 
-const App = ({ query }) => {
+const App = ({ querys }) => {
 
-  const columnWidth = calculateColumnWidth(recipes.length);
+  const articles = querys && querys
+    .filter(query => query.name === 'articles')
+    .map(article => article.value.split(','))
+    .flat();
+  //TODO 数値以外はoutなので、そのバリデーション
 
   const [loading, setLoading] = useState(true);
+  const [recipes, setRecipes] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
+    if (!articles) {
       setLoading(false);
-    }, 3000);
-  });
+      return;
+    }
+
+    const recipes = [];
+    Promise.all(articles.map(article => new Promise(resolve => {
+      getRecipe(article).then(recipe => {
+        console.log(recipe);
+        recipes.push(recipe);
+        resolve();
+      });
+    }))).then(() => {
+      console.log('resolved', recipes);
+      setRecipes(recipes);
+      setLoading(false);
+    });
+  }, [querys, setRecipes]);
+
+  const columnWidth = calculateColumnWidth(recipes.length);
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
       { loading &&
         <Loading />
       }
-      { !loading && query &&
+      { !loading && articles &&
         <Grid container justify="center">
           { recipes.map(recipe => {
               return (
@@ -242,7 +165,7 @@ const App = ({ query }) => {
           })}
         </Grid>
       }
-      { !loading && !query &&
+      { !loading && !articles &&
         <Form />
       }
     </div>
@@ -252,3 +175,103 @@ const App = ({ query }) => {
 const Loading = () => (<p style={{ width: '100%', height: '100%', textAlign: 'center' }}>Loading...</p>);
 
 export default App;
+
+// const recipes = [
+//   {
+//     title: 'にくじゃが',
+//     url: 'https://test-recipe/12345',
+//     info: {
+//       time: 30,
+//       amount: '3,4',
+//       keepable: '3',
+//     },
+//     ingredients: [
+//       { item: 'にんじん', amount: '1本' },
+//       { item: 'じゃがいも', amount: '1個' },
+//       { item: 'たまねぎ', amount: '1個' },
+//     ],
+//     processes: [
+//       'きる',
+//       'いためる',
+//       'やく',
+//     ],
+//     point: '醤油はすくなめ！'
+//   },
+//   {
+//     title: 'カレー',
+//     url: 'https://test-recipe/54321',
+//     info: {
+//       time: 60,
+//       amount: '5,6',
+//       keepable: '5',
+//     },
+//     ingredients: [
+//       { item: 'にんじん', amount: '1本' },
+//       { item: 'じゃがいも', amount: '1個' },
+//       { item: 'たまねぎ', amount: '1個' },
+//     ],
+//     processes: [
+//       'きる',
+//       'いためる',
+//       'やく',
+//       'ルー',
+//     ],
+//     point: 'たくさん作ろう！'
+//   },
+//   {
+//     title: '無限ピーマン',
+//     url: 'https://test-recipe/67890',
+//     info: {
+//       time: 10,
+//       amount: '1,2',
+//       keepable: '2',
+//     },
+//     ingredients: [
+//       { item: 'ピーマン', amount: '1個' },
+//       { item: 'マヨネーズ', amount: 'すこし' },
+//     ],
+//     processes: [
+//       'きる',
+//       'まぜる',
+//       'やく',
+//     ],
+//     point: '何も気をつける必要はない'
+//   },
+//   {
+//     title: 'かぶの浅漬',
+//     url: 'https://test-recipe/9876',
+//     info: {
+//       time: 10,
+//       amount: '1,2',
+//       keepable: '7',
+//     },
+//     ingredients: [
+//       { item: 'かぶ', amount: '1個' },
+//       { item: '酢', amount: 'すこし' },
+//     ],
+//     processes: [
+//       'きる',
+//       'まぜる',
+//     ],
+//     point: '漬けすぎないようにね！'
+//   },
+//   {
+//     title: 'にんじんシリシリ',
+//     url: 'https://test-recipe/10',
+//     info: {
+//       time: 30,
+//       amount: '3,4',
+//       keepable: '4',
+//     },
+//     ingredients: [
+//       { item: 'にんじん', amount: '1個' },
+//       { item: 'たまご', amount: 'すこし' },
+//     ],
+//     processes: [
+//       'シリシリする',
+//       '炒める',
+//       '卵でとじる',
+//     ],
+//     point: 'おいしいよ！'
+//   },
+// ];

@@ -21,7 +21,7 @@ const querys = search => {
   });
 }
 
-ReactDOM.render(<App query={querys(search)} />, document.getElementById('root'));
+ReactDOM.render(<App querys={querys(search)} />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

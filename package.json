@@ -10,6 +10,7 @@
     "bufferutil": "^4.0.1",
     "chrome-launcher": "^0.10.5",
     "chrome-remote-interface": "^0.27.1",
+    "http-proxy-middleware": "^0.19.1",
     "netlify-lambda": "^1.4.2",
     "puppeteer": "^1.12.2",
     "react": "^16.8.3",

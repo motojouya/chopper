@@ -1,6 +1,6 @@
 const launchChrome = require('@serverless-chrome/lambda')
 const CDP = require('chrome-remote-interface')
-const puppeteer = require('puppeteer')
+const puppeteer = require('puppeteer-core')
 
 const scraper = () => {
 

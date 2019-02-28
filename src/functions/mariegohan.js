@@ -53,7 +53,6 @@ const scraper = ($) => {
   };
 };
 
-
 exports.handler = async (event, context, callback) => {
 
   const articleId = event.queryStringParameters.article;
@@ -73,8 +72,7 @@ exports.handler = async (event, context, callback) => {
       return callback(null, {
         statusCode: 200,
         // headers: {'content-type': 'application/json'},
-        // body: JSON.stringify(result),
-        body: JSON.stringify({a: 'test'}),
+        body: JSON.stringify(result),
       });
     } catch (err) {
       return callback(err);

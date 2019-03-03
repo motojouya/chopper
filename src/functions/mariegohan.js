@@ -3,7 +3,7 @@ const request = require('request');
 //   JSDOM
 // } = require('jsdom');
 const cheerio = require('cheerio');
-const http = require('http');
+const https = require('http');
 
 const scraper = ($) => {
 
@@ -61,7 +61,7 @@ exports.handler = async (event, context, callback) => {
   //TODO articleIdは数値以外はoutなので、そのバリデーション
   console.log('url', url);
 
-  http.get(url, function(res) {
+  https.request(url, function(res) {
     res.setEncoding('utf8');
     res.on('data', function(body) {
       return callback(null, {

@@ -3,6 +3,7 @@ const request = require('request');
 //   JSDOM
 // } = require('jsdom');
 const cheerio = require('cheerio');
+const http = require('http');
 
 const scraper = ($) => {
 
@@ -58,33 +59,36 @@ exports.handler = async (event, context, callback) => {
   const articleId = event.queryStringParameters.article;
   const url = 'https://mariegohan.com/' + articleId;
   //TODO articleIdは数値以外はoutなので、そのバリデーション
+  console.log('url', url);
 
-  try {
-  request(url, (e, response, body) => {
-    return callback(null, {
-      statusCode: 200,
-      // headers: {'content-type': 'application/json'},
-      body: JSON.stringify({a: 'test'}),
+  http.get(url, function(res) {
+    res.setEncoding('utf8');
+    res.on('data', function(body) {
+      return callback(null, {
+        statusCode: 200,
+        // headers: {'content-type': 'application/json'},
+        body: JSON.stringify({a: 'test'}),
+      });
     });
-    // if (e) {
-    //   console.error(e)
-    // }
-    //
-    // try {
-    //   const $ = cheerio.load(body);
-    //   const result = scraper($);
-    //   result.url = url;
-    //   console.log(result);
-    //   return callback(null, {
-    //     statusCode: 200,
-    //     // headers: {'content-type': 'application/json'},
-    //     body: JSON.stringify(result),
-    //   });
-    // } catch (err) {
-    //   return callback(err);
-    // }
   });
-} catch (e) {
-  return callback(e);
-}
+
+  // request(url, (e, response, body) => {
+  //   if (e) {
+  //     console.error(e)
+  //   }
+  //
+  //   try {
+  //     const $ = cheerio.load(body);
+  //     const result = scraper($);
+  //     result.url = url;
+  //     console.log(result);
+  //     return callback(null, {
+  //       statusCode: 200,
+  //       // headers: {'content-type': 'application/json'},
+  //       body: JSON.stringify(result),
+  //     });
+  //   } catch (err) {
+  //     return callback(err);
+  //   }
+  // });
 }

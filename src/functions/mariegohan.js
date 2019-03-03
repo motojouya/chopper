@@ -62,8 +62,10 @@ exports.handler = async (event, context, callback) => {
   console.log('url', url);
 
   https.request(url, function(res) {
+    console.log('request');
     res.setEncoding('utf8');
     res.on('data', function(body) {
+      console.log(body);
       return callback(null, {
         statusCode: 200,
         // headers: {'content-type': 'application/json'},

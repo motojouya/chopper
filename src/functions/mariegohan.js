@@ -54,7 +54,7 @@ const scraper = ($) => {
   };
 };
 
-exports.handler = async (event, context, callback) => {
+exports.handler = (event, context, callback) => {
 
   const articleId = event.queryStringParameters.article;
   const url = 'https://mariegohan.com/' + articleId;

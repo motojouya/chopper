@@ -3,7 +3,7 @@ const request = require('request');
 //   JSDOM
 // } = require('jsdom');
 const cheerio = require('cheerio');
-const https = require('http');
+const https = require('https');
 
 const scraper = ($) => {
 
